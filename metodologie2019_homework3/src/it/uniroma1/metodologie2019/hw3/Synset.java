@@ -58,24 +58,24 @@ public class Synset {
 	/**
 	 * Array su cui itera il costruttore, dato da String.split(" ") dalla linea del file letto in memoria
 	 */
-	private Object[] array;
+	private String[] array;
 	
 	/**
 	 * Costruttore della classe Synset, itera su un array dato in input
 	 * @param arrayFromSplit dato da String.split(" ") dalla linea del file letto in memoria
 	 */
-	public Synset(Object[] arrayFromSplit) {
+	public Synset(String[] arrayFromSplit) {
 		this.array = Arrays.copyOf(arrayFromSplit, arrayFromSplit.length);
-		offset = (String)array[indice++];
-		fileNum = Integer.parseInt((String) array[indice++]);
+		offset = array[indice++];
+		fileNum = Integer.parseInt(array[indice++]);
 		setPOS();
-		wordInSyn = Integer.parseInt((String) array[indice++], 16);
+		wordInSyn = Integer.parseInt(array[indice++], 16);
 		setWordList();
-		countPuntatori = Integer.parseInt((String) array[indice++]);
+		countPuntatori = Integer.parseInt(array[indice++]);
 		setSinonimi();
 		setGlossa();
 		setEsempi();
-		ID = ""+offset+pos.getTipo();
+		ID = offset+pos.getTipo();
 	}
 	
 	/**
@@ -143,7 +143,7 @@ public class Synset {
 	 * Dato un valore char, restituisce il POS corrispondente
 	 */
 	private void setPOS() { 
-		switch (((String)array[indice++]).charAt(0)) {
+		switch ((array[indice++]).charAt(0)) {
 			case 'n': pos = POS.NOUN; break;
 			case 'v': pos = POS.VERB; break;
 			case 'a': pos = POS.ADJECTIVE; break;
@@ -159,7 +159,7 @@ public class Synset {
 	 */
 	private void setWordList() {
 		for (int j = 0; j < wordInSyn; j++) {
-			wordList.add(((String)array[indice]).toLowerCase());
+			wordList.add((array[indice]).toLowerCase());
 			indice+= 2;
 		}
 	}
@@ -171,7 +171,7 @@ public class Synset {
 	 */
 	private void setSinonimi() {
 		for (int i = 0; i < countPuntatori; i++) {
-			synsetPuntati.add(""+array[indice++]+array[indice++]+array[indice++]);
+			synsetPuntati.add(array[indice++]+array[indice++]+array[indice++]);
 			indice++;
 		}
 	}
@@ -182,11 +182,11 @@ public class Synset {
 	private void setGlossa() {
 		outerLoop:
 			for (--indice; indice < array.length; indice++)
-				if (((String)array[indice]).equals("|")) {
+				if ((array[indice]).equals("|")) {
 					for (++indice; indice < array.length; indice++) {
-						String s = (String)array[indice];
+						String s = array[indice];
 						if (s.endsWith(";") || s.endsWith(":")) { // ":" per la sfida
-							if (indice+1 < array.length && ((String)array[indice+1]).startsWith("\"")) {
+							if (indice+1 < array.length && (array[indice+1]).startsWith("\"")) {
 								glossa+= s;
 								break outerLoop;
 							}
